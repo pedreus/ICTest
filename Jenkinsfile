@@ -45,7 +45,7 @@ pipeline {
     stage('Build') {      
       steps {        
         echo "------------>Build<------------"
-        sh 'xcodebuild -workspace ICTest/ICTest.xcodeproj/project.xcworkspace/ -scheme "ICTest" -destination \'platform=iOS Simulator,name=iPhone 11\''
+        sh 'xcodeBuild -workspace ICTest/ICTest.xcodeproj/project.xcworkspace/ -scheme "ICTest" -destination \'platform=iOS Simulator,name=iPhone 11\''
       }    
     }  
   }
