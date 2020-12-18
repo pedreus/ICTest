@@ -54,9 +54,11 @@ pipeline {
       }    
 
       stage('Prepare') {
-          echo "------------>Unit Tests<------------"  
+        steps {
+          echo "------------>Prepare<------------"  
           writeFile file: "${PROJECT_NAME}/fhconfig.plist", text: FH_CONFIG_CONTENT
           sh '/usr/local/bin/pod install'
+        }
       }
 
       stage('Compile & Unit Tests') {      
