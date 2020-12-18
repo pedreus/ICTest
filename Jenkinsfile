@@ -45,7 +45,7 @@ pipeline {
     stage('Build') {      
       steps {        
         echo "------------>Build<------------"
-        sh 'xcodebuild -scheme "Presentation" clean build CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO"'
+        sh 'xcodebuild -scheme "ICTest" clean build CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO"'
 
         //sh 'xcodeBuild -workspace ICTest/ICTest.xcodeproj/project.xcworkspace/ -scheme "ICTest" -destination \'platform=iOS Simulator,name=iPhone 11\''
       }    
