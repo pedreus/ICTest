@@ -21,9 +21,9 @@ pipeline {
   stages{    
 
     stage('Checkout') {      
-      steps{        
-        checkout scm
+      steps{                
         echo "------------>Checkout<------------"      
+        checkout scm
       }    
     }    
 
@@ -44,7 +44,8 @@ pipeline {
 
     stage('Build') {      
       steps {        
-        echo "------------>Build<------------"      
+        echo "------------>Build<------------"
+        sh 'xcodebuild -workspace ICTest/ICTest.xcodeproj/project.xcworkspace/ -scheme "ICTest" -destination \'platform=iOS Simulator,name=iPhone 11\''
       }    
     }  
   }
