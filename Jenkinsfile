@@ -45,75 +45,76 @@ pipeline {
 
   //Aquí comienzan los “items” del Pipeline  
   node('ios') { 
-
-    stage('Checkout') {      
-      steps{        
-        echo "------------>Checkout<------------"      
-        checkout scm
+    stages {
+      stage('Checkout') {      
+        steps{        
+          echo "------------>Checkout<------------"      
+          checkout scm
+        }    
       }    
-    }    
-    
-    stage('Prepare') {
-        echo "------------>Unit Tests<------------"  
-        writeFile file: "${PROJECT_NAME}/fhconfig.plist", text: FH_CONFIG_CONTENT
-        sh '/usr/local/bin/pod install'
+
+      stage('Prepare') {
+          echo "------------>Unit Tests<------------"  
+          writeFile file: "${PROJECT_NAME}/fhconfig.plist", text: FH_CONFIG_CONTENT
+          sh '/usr/local/bin/pod install'
+      }
+
+      stage('Compile & Unit Tests') {      
+        steps{        
+          echo "------------>Unit Tests<------------"      
+        }    
+      }    
+
+      stage('Static Code Analysis') {      
+        steps{        
+          echo '------------>Análisis de código estático<------------'        
+          withSonarQubeEnv('Sonar') {
+            sh "${tool name: 'SonarScanner',type:'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner"        
+          }      
+        }    
+      }    
+
+      stage('Build') {      
+        steps {        
+          echo "------------>Build<------------"      
+          withEnv(["XC_VERSION=${XC_VERSION}"]) {
+              xcodeBuild(
+                      cleanBeforeBuild: CLEAN,
+                      src: './',
+                      schema: "${PROJECT_NAME}",
+                      workspace: "${PROJECT_NAME}",
+                      buildDir: "build",
+                      sdk: "${SDK}",
+                      version: "${VERSION}",
+                      shortVersion: "${SHORT_VERSION}",
+                      bundleId: "${BUNDLE_ID}",
+                      infoPlistPath: "${INFO_PLIST}",
+                      xcodeBuildArgs: 'ENABLE_BITCODE=NO OTHER_CFLAGS="-fstack-protector -fstack-protector-all"',
+                      autoSign: false,
+                      config: "${BUILD_CONFIG}"
+              )
+          }
+        }    
+      }  
     }
 
-    stage('Compile & Unit Tests') {      
-      steps{        
-        echo "------------>Unit Tests<------------"      
+    post {    
+      always {      
+        echo 'This will always run'    
       }    
-    }    
-
-    stage('Static Code Analysis') {      
-      steps{        
-        echo '------------>Análisis de código estático<------------'        
-        withSonarQubeEnv('Sonar') {
-          sh "${tool name: 'SonarScanner',type:'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner"        
-        }      
+      success {      
+        echo 'This will run only if successful'    
       }    
-    }    
-
-    stage('Build') {      
-      steps {        
-        echo "------------>Build<------------"      
-        withEnv(["XC_VERSION=${XC_VERSION}"]) {
-            xcodeBuild(
-                    cleanBeforeBuild: CLEAN,
-                    src: './',
-                    schema: "${PROJECT_NAME}",
-                    workspace: "${PROJECT_NAME}",
-                    buildDir: "build",
-                    sdk: "${SDK}",
-                    version: "${VERSION}",
-                    shortVersion: "${SHORT_VERSION}",
-                    bundleId: "${BUNDLE_ID}",
-                    infoPlistPath: "${INFO_PLIST}",
-                    xcodeBuildArgs: 'ENABLE_BITCODE=NO OTHER_CFLAGS="-fstack-protector -fstack-protector-all"',
-                    autoSign: false,
-                    config: "${BUILD_CONFIG}"
-            )
-        }
+      failure {      
+        echo 'This will run only if failed'    
       }    
-    }  
-  }
-
-  post {    
-    always {      
-      echo 'This will always run'    
-    }    
-    success {      
-      echo 'This will run only if successful'    
-    }    
-    failure {      
-      echo 'This will run only if failed'    
-    }    
-    unstable {      
-      echo 'This will run only if the run was marked as unstable'    
-    }    
-    changed {      
-      echo 'This will run only if the state of the Pipeline has changed'      
-      echo 'For example, if the Pipeline was previously failing but is now successful'    
-    }  
+      unstable {      
+        echo 'This will run only if the run was marked as unstable'    
+      }    
+      changed {      
+        echo 'This will run only if the state of the Pipeline has changed'      
+        echo 'For example, if the Pipeline was previously failing but is now successful'    
+      }  
+    }
   }
 }
