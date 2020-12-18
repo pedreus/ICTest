@@ -1,6 +1,4 @@
-pipeline {  
-
-  // sample values commented below are for https://github.com/feedhenry-templates/helloworld-ios-swift
+// sample values commented below are for https://github.com/feedhenry-templates/helloworld-ios-swift
   /* ------------- use these to hardcode values in Jenkinsfile ---------------- */
   PROJECT_NAME = "ICTest"
   INFO_PLIST = "ICTest/Info.plist"
@@ -25,6 +23,8 @@ pipeline {
   else if(BUILD_CONFIG.toLowerCase() == "release" || BUILD_CONFIG.toLowerCase() == "distribution"){
       BUILD_CONFIG = "Release"
   }
+
+pipeline {  
   
   //Donde se va a ejecutar el Pipeline  
   agent {    
