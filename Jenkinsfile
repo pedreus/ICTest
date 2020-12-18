@@ -44,7 +44,7 @@ pipeline {
   //}
 
   //Aquí comienzan los “items” del Pipeline  
-  node('ios') { 
+  //node('ios') { 
     stages {
       stage('Checkout') {      
         steps{        
@@ -116,5 +116,5 @@ pipeline {
         echo 'For example, if the Pipeline was previously failing but is now successful'    
       }  
     }
-  }
+  //}
 }
