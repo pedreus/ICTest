@@ -22,6 +22,7 @@ pipeline {
 
     stage('Checkout') {      
       steps{        
+        checkout scm
         echo "------------>Checkout<------------"      
       }    
     }    
