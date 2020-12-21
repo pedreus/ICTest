@@ -9,13 +9,6 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '3'))
     disableConcurrentBuilds()  
   }
-  //Una sección que define las herramientas “preinstaladas” en Jenkins  
-  tools {    
-    jdk 'JDK8_Centos' 
-    //Preinstalada en la Configuración del Master    
-    gradle 'Gradle4.5_Centos' 
-    //Preinstalada en la Configuración del Master  
-  }
 
   //Aquí comienzan los “items” del Pipeline  
   stages{    
@@ -26,14 +19,23 @@ pipeline {
         checkout scm
       }    
     }    
+	
+	stage('Build') {      
+      steps {        
+        echo "------------>Build<------------"
+        sh 'xcodebuild -scheme "ICTest" clean build -destination \'platform=iOS Simulator,name=iPhone 11\''        
+      }    
+    }  
 
-    stage('Compile & Unit Tests') {      
+    /*stage('Unit Tests') {      
       steps{        
-        echo "------------>Unit Tests<------------"      
+        echo "------------>Unit Tests<------------"    
+		sh "xcodebuild -scheme "ICTest" -enableCodeCoverage YES -configuration Debug -destination \'platform=iOS Simulator,name=iPhone 11\' test | tee build/xcodebuild-test.log | xcpretty -r junit --output build/reports/junit.xml"
+        sh "slather coverage --scheme "ICTest" --cobertura-xml --output-directory build/coverage 'ICTest.xcodeproj'"		
       }    
     }    
 
-    /*stage('Static Code Analysis') {      
+    stage('Static Code Analysis') {      
       steps{        
         echo '------------>Análisis de código estático<------------'        
         withSonarQubeEnv('Sonar') {
@@ -42,14 +44,7 @@ pipeline {
       }    
     }*/    
 
-    stage('Build') {      
-      steps {        
-        echo "------------>Build<------------"
-        sh 'xcodebuild -scheme "ICTest" clean build CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO"'
-
-        //sh 'xcodeBuild -workspace ICTest/ICTest.xcodeproj/project.xcworkspace/ -scheme "ICTest" -destination \'platform=iOS Simulator,name=iPhone 11\''
-      }    
-    }  
+    
   }
 
   post {    
