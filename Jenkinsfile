@@ -31,8 +31,8 @@ pipeline {
     stage('Unit Tests') {      
       steps{        
         echo "------------>Unit Tests<------------"    
-		sh 'xcodebuild -scheme "ICTest" -enableCodeCoverage YES -configuration Debug CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO" test | tee build/xcodebuild-test.log | xcpretty -r junit --output build/reports/junit.xml'
-        sh 'slather coverage --scheme "ICTest" --cobertura-xml --output-directory build/coverage "ICTest.xcodeproj"'		
+		sh 'xcodebuild -scheme "ICTest" -enableCodeCoverage YES -configuration Debug CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO" test | tee build/xcodebuild-test.log'
+        //sh 'slather coverage --scheme "ICTest" --cobertura-xml --output-directory build/coverage "ICTest.xcodeproj"'		
       }    
     }    
 
