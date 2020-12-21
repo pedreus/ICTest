@@ -13,30 +13,30 @@ pipeline {
   //Aquí comienzan los “items” del Pipeline  
   stages{    
 
-    stage('Checkout') {      
+    /*stage('Checkout') {      
       steps{                
         echo "------------>Checkout<------------"      
         checkout scm
       }    
-    }    
+    }*/    
 	
 	stage('Build') {      
       steps {        
         echo "------------>Build<------------"
         // sh 'xcodebuild -scheme "ICTest" clean build -destination \'platform=iOS Simulator,name=iPhone 11\'' 
-		sh 'xcodebuild -scheme "ICTest" clean build CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO"'		
+		sh 'xcodebuild -scheme "ICTest" clean build -destination CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO"'		
       }    
     }  
 
-    /*stage('Unit Tests') {      
+    stage('Unit Tests') {      
       steps{        
         echo "------------>Unit Tests<------------"    
-		sh "xcodebuild -scheme "ICTest" -enableCodeCoverage YES -configuration Debug -destination \'platform=iOS Simulator,name=iPhone 11\' test | tee build/xcodebuild-test.log | xcpretty -r junit --output build/reports/junit.xml"
-        sh "slather coverage --scheme "ICTest" --cobertura-xml --output-directory build/coverage 'ICTest.xcodeproj'"		
+		sh "xcodebuild -scheme "ICTest" -enableCodeCoverage YES -configuration Debug -destination CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO" test | tee build/xcodebuild-test.log | xcpretty -r junit --output build/reports/junit.xml"
+        	sh "slather coverage --scheme "ICTest" --cobertura-xml --output-directory build/coverage 'ICTest.xcodeproj'"		
       }    
     }    
 
-    stage('Static Code Analysis') {      
+    /*stage('Static Code Analysis') {      
       steps{        
         echo '------------>Análisis de código estático<------------'        
         withSonarQubeEnv('Sonar') {
