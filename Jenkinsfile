@@ -42,7 +42,7 @@ pipeline {
         echo "------------>Unit Tests<------------"
         //sh 'xcodebuild -scheme "ICTest" -enableCodeCoverage YES -configuration Debug -destination "name=iPhone 11" build-for-testing | tee build/xcodebuild-test.log | xcpretty'
         //sh 'xcodebuild -scheme "ICTest" -configuration "Debug" build test -destination "platform=iOS Simulator,name=iPhone 11,OS=14.2" -enableCodeCoverage YES | /usr/local/bin/xcpretty -r junit'
-	sh 'xcodebuild -project "ICTest" -configuration "Debug"'
+	sh 'xcodebuild -project "ICTest/ICTest.xcodeproj/project.pbxproj" -configuration "Debug"'
       }
     }
 
